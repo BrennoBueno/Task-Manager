@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, 'SRC', 'Config', '.env') });
 const database = require('./src/config/database');
 const express = require('express');
 
@@ -31,7 +32,7 @@ app.get('/usuarios', async (req, res) => {
 
 async function startServer() {
     try {
-        const cliente = await db.pool.connect();
+        const cliente = await database.pool.connect();
         console.log('conexão com o banco de dados PostgreSQL bem-sucedida!');
         cliente.release();
     
