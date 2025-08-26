@@ -1,13 +1,47 @@
-const express = require('express')
-const app = express()
-const port = 3000
+require('dotenv').config();
+const database = require('./src/config/database');
+const express = require('express');
 
-require('dotenv').config()
+const app = express();
+const port = process.env.PORT;
 
-app.get ('/', (req, res) => {
-    res.send('Olá, o servidor está rodando!!')
-})
+app.use(express.json());
 
-app.listen(port, () => {
-    console.log(`ouvindo a porta ${port}`)
-})
+async function conexaoteste() {
+    try {
+        console.log('Iniciando tentativa de conexão com o banco de dados');
+        await database.pool.query('SELECT NOW()');
+        console.log('Conexão com o bano de dados PostgreSQL bem-sucedida!');
+
+    } catch (error) {
+        console.log('Erro ao se conectar ao banco de dados:', error);
+        process.exit(1);
+    }
+};
+//rota para buscar usuarios
+app.get('/usuarios', async (req, res) => {
+    try {
+        const resultado = await db.query('SELECT id, nome, email FROM usuarios');
+        res.status(200).json(resultado.rows);
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+async function startServer() {
+    try {
+        const cliente = await db.pool.connect();
+        console.log('conexão com o banco de dados PostgreSQL bem-sucedida!');
+        cliente.release();
+    
+        app.listen(port, () => {
+        console.log(`Servidor rodando e ouvindo na porta ${port}`);
+        });
+    } catch (error) {
+        console.error('Falha ao conectar ao banco de dados:', error);
+        process.exit(1);
+    }
+
+}
+startServer();
