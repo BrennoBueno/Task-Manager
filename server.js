@@ -19,7 +19,7 @@ async function conexaoteste() {
         process.exit(1);
     }
 };
-//rota para buscar usuarios
+
 app.get('/usuarios', async (req, res) => {
     try {
         const resultado = await db.query('SELECT id, nome, email FROM usuarios');
