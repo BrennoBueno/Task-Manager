@@ -32,3 +32,13 @@ try {
     res.status(500).json({error: 'Erro interno do servidor' });
 }
 });
+
+app.post('/usuarios', async (req, res) => {
+    try {
+        let adicionar = await database.pool.query('INSERT INTO usuarios (nome, email, senha), VALUES ($1, $2, $3), RETURNING nome, email', [req.body.nome, req.body.email, req.body.senha]);
+        res.status(201).json(adicionar.rows);
+    }catch (error) {
+        console.error('Erro ao cadastrar um usuário: ', error);
+        res.status(500).json({error: 'Erro interno do servidor' });
+    };
+});
